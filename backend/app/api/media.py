@@ -23,6 +23,8 @@ from app.api.dependencies import (
 )
 from app.services.cloudinary import cloudinary_service
 from app.services.ai_caption import ai_caption_service
+from app.services.media_service import media_service
+from app.services.content_service import content_service
 
 router = APIRouter()
 
@@ -311,28 +313,38 @@ async def generate_comparison(
             detail="Both before and after photos required for comparison"
         )
 
-    # Generate comparison using Cloudinary
-    result = cloudinary_service.generate_comparison(
-        before_public_id=media_set.before_photo_public_id,
-        after_public_id=media_set.after_photo_public_id,
-        layout=request.layout
-    )
-
-    if not result:
+    try:
+        # Generate comparison using MediaService
+        comparison_url = await media_service.create_comparison(
+            media_set.before_photo_url,
+            media_set.after_photo_url,
+            salon_id=media_set.salon_id,
+            media_set_id=media_set.id,
+            layout=request.layout,
+            add_labels=request.add_labels if hasattr(request, 'add_labels') else True
+        )
+    except RuntimeError as e:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=str(e)
+        )
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to generate comparison image"
+            detail=f"Failed to generate comparison image: {str(e)}"
         )
 
     # Update media set with comparison URL
-    media_set.comparison_photo_url = result.get("url")
-    media_set.comparison_photo_public_id = result.get("public_id")
+    media_set.comparison_photo_url = comparison_url
     media_set.updated_at = datetime.utcnow()
     db.commit()
 
+    # Also get platform-optimized versions
+    platform_urls = await media_service.get_platform_variants(comparison_url)
+
     return {
-        "comparison_url": result.get("url"),
-        "public_id": result.get("public_id")
+        "comparison_url": comparison_url,
+        "platform_variants": platform_urls
     }
 
 
@@ -387,30 +399,35 @@ async def generate_caption(
 
     await require_salon_access(media_set.salon_id, current_user, db)
 
-    # Build context for AI
-    context = {
-        "services": media_set.services_performed or [],
-        "techniques": media_set.techniques_used or [],
-        "formulas": media_set.color_formulas or [],
-        "starting_level": media_set.starting_level,
-        "achieved_level": media_set.achieved_level,
-        "tags": media_set.tags or [],
-        "has_before_after": bool(media_set.before_photo_url and media_set.after_photo_url),
-    }
+    # Get salon name for personalization
+    from app.models import Salon, Staff
+    salon = db.query(Salon).filter(Salon.id == media_set.salon_id).first()
+    staff = db.query(Staff).filter(Staff.id == media_set.staff_id).first()
 
-    result = ai_caption_service.generate_caption(
-        context=context,
-        tone=request.tone,
-        include_hashtags=request.include_hashtags,
-        hashtag_count=request.hashtag_count,
-        include_call_to_action=request.include_call_to_action,
-        custom_instructions=request.custom_instructions,
-    )
+    salon_name = salon.name if salon else None
+    stylist_name = None
+    if staff and staff.user:
+        stylist_name = f"{staff.user.first_name} {staff.user.last_name}"
 
-    if not result:
+    try:
+        # Use the new ContentService with rich JSON output
+        result = await content_service.generate_caption(
+            media_set,
+            style=request.tone or "professional",
+            salon_name=salon_name,
+            stylist_name=stylist_name,
+            custom_instructions=request.custom_instructions,
+            include_cta=request.include_call_to_action,
+        )
+    except RuntimeError as e:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=str(e)
+        )
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to generate caption. Check AI service configuration."
+            detail=f"Failed to generate caption: {str(e)}"
         )
 
     # Store generated caption
@@ -422,6 +439,7 @@ async def generate_caption(
     return CaptionGenerateResponse(
         caption=result.get("caption", ""),
         hashtags=result.get("hashtags", []),
+        alt_captions=result.get("alt_captions", []),
         suggested_post_time=result.get("suggested_post_time"),
         confidence_score=result.get("confidence_score"),
     )

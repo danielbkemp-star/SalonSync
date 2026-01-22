@@ -22,6 +22,7 @@ from app.schemas.base import MessageResponse, PaginatedResponse
 from app.api.dependencies import (
     CurrentUser, require_salon_access, SalonAccess
 )
+from app.services.scheduling_service import scheduling_service
 
 router = APIRouter()
 

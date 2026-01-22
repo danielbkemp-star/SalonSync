@@ -13,8 +13,17 @@ from app.services.social_post import SocialPostService
 from app.services.cloudinary import CloudinaryService
 from app.services.ai_caption import AICaptionService
 
+# Phase 3 - Differentiator Services
+from app.services.media_service import MediaService, media_service
+from app.services.content_service import ContentService, content_service
+from app.services.instagram_service import InstagramService, instagram_service
+from app.services.payment_service import PaymentService, payment_service
+from app.services.scheduling_service import SchedulingService, scheduling_service
+
 __all__ = [
+    # Base
     "BaseService",
+    # Core Services
     "SalonService",
     "StaffService",
     "ClientService",
@@ -24,4 +33,15 @@ __all__ = [
     "SocialPostService",
     "CloudinaryService",
     "AICaptionService",
+    # Differentiator Services (Phase 3)
+    "MediaService",
+    "media_service",
+    "ContentService",
+    "content_service",
+    "InstagramService",
+    "instagram_service",
+    "PaymentService",
+    "payment_service",
+    "SchedulingService",
+    "scheduling_service",
 ]

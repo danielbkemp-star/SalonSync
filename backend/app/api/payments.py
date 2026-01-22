@@ -17,6 +17,7 @@ from app.schemas.base import MessageResponse
 from app.api.dependencies import (
     CurrentUser, require_salon_access, SalonAccess
 )
+from app.services.payment_service import payment_service
 
 router = APIRouter()
 settings = get_settings()

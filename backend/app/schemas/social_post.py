@@ -148,6 +148,7 @@ class CaptionGenerateResponse(BaseSchema):
     """AI generated caption response"""
     caption: str
     hashtags: List[str]
+    alt_captions: Optional[List[str]] = None  # Alternative caption suggestions
     suggested_post_time: Optional[datetime] = None
     confidence_score: Optional[float] = None
 
