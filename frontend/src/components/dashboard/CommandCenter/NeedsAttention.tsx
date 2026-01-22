@@ -17,10 +17,10 @@ interface AttentionItem {
 
 export function NeedsAttention({ maxItems = 5, className }: NeedsAttentionProps) {
   // TODO: Fetch from API
-  const items: AttentionItem[] = [
+  const items: AttentionItem[] = ([
     {
       id: '1',
-      type: 'warning',
+      type: 'warning' as const,
       title: '2 appointments starting soon',
       description: 'Clients not checked in yet',
       icon: <Clock className="h-4 w-4" />,
@@ -28,7 +28,7 @@ export function NeedsAttention({ maxItems = 5, className }: NeedsAttentionProps)
     },
     {
       id: '2',
-      type: 'info',
+      type: 'info' as const,
       title: '3 products low on stock',
       description: 'Shampoo, conditioner, styling gel',
       icon: <Package className="h-4 w-4" />,
@@ -36,13 +36,13 @@ export function NeedsAttention({ maxItems = 5, className }: NeedsAttentionProps)
     },
     {
       id: '3',
-      type: 'alert',
+      type: 'alert' as const,
       title: '1 no-show this week',
       description: 'Consider follow-up',
       icon: <UserX className="h-4 w-4" />,
       actionUrl: '/reports/no-shows',
     },
-  ].slice(0, maxItems)
+  ] as AttentionItem[]).slice(0, maxItems)
 
   const typeStyles = {
     warning: {
