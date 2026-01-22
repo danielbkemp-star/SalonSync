@@ -365,11 +365,13 @@ async def add_formula(
 
     await require_salon_access(media_set.salon_id, current_user, db)
 
-    formulas = media_set.color_formulas or []
+    # Create new list to ensure SQLAlchemy detects the change
+    formulas = list(media_set.color_formulas or [])
     formulas.append(formula.model_dump())
     media_set.color_formulas = formulas
     media_set.updated_at = datetime.utcnow()
     db.commit()
+    db.refresh(media_set)
 
     return {"formulas": media_set.color_formulas, "count": len(formulas)}
 

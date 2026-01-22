@@ -47,7 +47,7 @@ class ClientBase(BaseSchema):
 
 class ClientCreate(ClientBase):
     """Schema for creating a client"""
-    salon_id: int
+    # salon_id is taken from URL path, not body
 
     # Contact
     phone_secondary: Optional[str] = None

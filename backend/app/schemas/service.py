@@ -27,7 +27,7 @@ class ServiceBase(BaseSchema):
 
 class ServiceCreate(ServiceBase):
     """Schema for creating a service"""
-    salon_id: int
+    # salon_id is taken from URL path, not body
 
     # Pricing
     price: float = Field(..., ge=0)

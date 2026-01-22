@@ -80,6 +80,9 @@ class Sale(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
+    # Salon Reference (for multi-tenant)
+    salon_id = Column(Integer, ForeignKey("salons.id"), nullable=False, index=True)
+
     # References
     client_id = Column(Integer, ForeignKey("clients.id"), nullable=True)
     staff_id = Column(Integer, ForeignKey("staff.id"), nullable=True)  # Who processed the sale
@@ -126,6 +129,7 @@ class Sale(Base):
     created_by_id = Column(Integer, ForeignKey("users.id"), nullable=True)
 
     # Relationships
+    salon = relationship("Salon", back_populates="sales")
     client = relationship("Client", back_populates="sales")
     items = relationship("SaleItem", back_populates="sale", cascade="all, delete-orphan")
 

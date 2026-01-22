@@ -13,6 +13,7 @@ from sqlalchemy import func
 from app.database import get_db
 from app.models import User, Salon, Staff, Client, Appointment, Sale, Service
 from app.models.appointment import AppointmentStatus
+from app.models.user import UserRole
 from app.schemas.salon import (
     SalonCreate, SalonUpdate, SalonResponse, SalonListResponse,
     SalonSettings, SalonStats, SalonSocialConnect, SalonSocialStatus,
@@ -93,8 +94,7 @@ async def create_salon(
     db.add(staff)
 
     # Update user role to owner if they're a client
-    if current_user.role.value == "client":
-        from app.models.user import UserRole
+    if current_user.role == UserRole.CLIENT:
         current_user.role = UserRole.OWNER
 
     db.commit()

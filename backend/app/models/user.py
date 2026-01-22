@@ -13,6 +13,7 @@ from app.database import Base
 
 class UserRole(str, enum.Enum):
     """User roles for SalonSync"""
+    ADMIN = "Admin"  # System administrator
     OWNER = "Owner"
     MANAGER = "Manager"
     SENIOR_STYLIST = "Senior Stylist"

@@ -107,6 +107,7 @@ class Salon(Base):
     clients = relationship("Client", back_populates="salon")
     services = relationship("Service", back_populates="salon")
     appointments = relationship("Appointment", back_populates="salon")
+    sales = relationship("Sale", back_populates="salon")
     media_sets = relationship("MediaSet", back_populates="salon")
     social_posts = relationship("SocialPost", back_populates="salon")
 

@@ -468,7 +468,8 @@ async def add_client_tags(
 
     await require_salon_access(client.salon_id, current_user, db)
 
-    current_tags = client.tags or []
+    # Create new list to ensure SQLAlchemy detects the change
+    current_tags = list(client.tags or [])
     for tag in tags:
         if tag not in current_tags:
             current_tags.append(tag)
@@ -476,6 +477,7 @@ async def add_client_tags(
     client.tags = current_tags
     client.updated_at = datetime.utcnow()
     db.commit()
+    db.refresh(client)
 
     return {"tags": client.tags}
 
@@ -499,10 +501,11 @@ async def remove_client_tag(
 
     current_tags = client.tags or []
     if tag in current_tags:
-        current_tags.remove(tag)
-        client.tags = current_tags
+        # Create new list to ensure SQLAlchemy detects the change
+        client.tags = [t for t in current_tags if t != tag]
         client.updated_at = datetime.utcnow()
         db.commit()
+        db.refresh(client)
 
     return {"tags": client.tags}
 
