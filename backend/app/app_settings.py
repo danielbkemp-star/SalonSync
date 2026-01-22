@@ -7,6 +7,7 @@ from __future__ import annotations
 import os
 from functools import lru_cache
 from pathlib import Path
+from typing import Optional
 
 from pydantic_settings import BaseSettings
 
@@ -36,42 +37,42 @@ class Settings(BaseSettings):
     RATE_LIMIT_ENABLED: bool = True
 
     # AI Services
-    ANTHROPIC_API_KEY: str | None = None
-    OPENAI_API_KEY: str | None = None
+    ANTHROPIC_API_KEY: Optional[str] = None
+    OPENAI_API_KEY: Optional[str] = None
 
     # Media Storage (Cloudinary)
-    CLOUDINARY_CLOUD_NAME: str | None = None
-    CLOUDINARY_API_KEY: str | None = None
-    CLOUDINARY_API_SECRET: str | None = None
+    CLOUDINARY_CLOUD_NAME: Optional[str] = None
+    CLOUDINARY_API_KEY: Optional[str] = None
+    CLOUDINARY_API_SECRET: Optional[str] = None
 
     # Social Media - Instagram
-    INSTAGRAM_APP_ID: str | None = None
-    INSTAGRAM_APP_SECRET: str | None = None
+    INSTAGRAM_APP_ID: Optional[str] = None
+    INSTAGRAM_APP_SECRET: Optional[str] = None
 
     # Social Media - TikTok
-    TIKTOK_CLIENT_KEY: str | None = None
-    TIKTOK_CLIENT_SECRET: str | None = None
+    TIKTOK_CLIENT_KEY: Optional[str] = None
+    TIKTOK_CLIENT_SECRET: Optional[str] = None
 
     # Email Configuration
-    SMTP_HOST: str | None = None
+    SMTP_HOST: Optional[str] = None
     SMTP_PORT: int = 587
-    SMTP_USER: str | None = None
-    SMTP_PASSWORD: str | None = None
+    SMTP_USER: Optional[str] = None
+    SMTP_PASSWORD: Optional[str] = None
     SMTP_FROM_EMAIL: str = "noreply@salonsync.com"
 
     # SMS Configuration (Twilio)
-    TWILIO_ACCOUNT_SID: str | None = None
-    TWILIO_AUTH_TOKEN: str | None = None
-    TWILIO_PHONE_NUMBER: str | None = None
+    TWILIO_ACCOUNT_SID: Optional[str] = None
+    TWILIO_AUTH_TOKEN: Optional[str] = None
+    TWILIO_PHONE_NUMBER: Optional[str] = None
 
     # Stripe Payment Processing
-    STRIPE_SECRET_KEY: str | None = None
-    STRIPE_PUBLISHABLE_KEY: str | None = None
-    STRIPE_WEBHOOK_SECRET: str | None = None
+    STRIPE_SECRET_KEY: Optional[str] = None
+    STRIPE_PUBLISHABLE_KEY: Optional[str] = None
+    STRIPE_WEBHOOK_SECRET: Optional[str] = None
 
     # Square Payment Processing (alternative)
-    SQUARE_ACCESS_TOKEN: str | None = None
-    SQUARE_LOCATION_ID: str | None = None
+    SQUARE_ACCESS_TOKEN: Optional[str] = None
+    SQUARE_LOCATION_ID: Optional[str] = None
 
     # Frontend URL (for OAuth redirects)
     FRONTEND_URL: str = "http://localhost:5173"

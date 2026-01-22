@@ -5,7 +5,7 @@ Uses Argon2 for new passwords with bcrypt fallback for legacy hashes
 """
 
 from datetime import datetime, timedelta, timezone
-from typing import Any, NamedTuple
+from typing import Any, Dict, NamedTuple, Optional, Union
 
 import bcrypt
 from argon2 import PasswordHasher
@@ -71,7 +71,7 @@ def _verify_bcrypt_password(plain_password: str, hashed_password: str) -> Passwo
         return PasswordVerifyResult(verified=False, needs_rehash=False)
 
 
-def create_access_token(subject: str | int, expires_delta: timedelta | None = None) -> str:
+def create_access_token(subject: Union[str, int], expires_delta: Optional[timedelta] = None) -> str:
     """Create a JWT access token."""
     settings = get_settings()
 
@@ -91,7 +91,7 @@ def create_access_token(subject: str | int, expires_delta: timedelta | None = No
     return encoded_jwt
 
 
-def decode_token(token: str) -> dict[str, Any] | None:
+def decode_token(token: str) -> Optional[Dict[str, Any]]:
     """Decode and validate a JWT token."""
     settings = get_settings()
 
@@ -125,7 +125,7 @@ def generate_password_reset_token(email: str) -> str:
     )
 
 
-def verify_password_reset_token(token: str) -> str | None:
+def verify_password_reset_token(token: str) -> Optional[str]:
     """Verify a password reset token and extract the email."""
     settings = get_settings()
 
@@ -161,7 +161,7 @@ def generate_email_verification_token(email: str) -> str:
     )
 
 
-def verify_email_verification_token(token: str) -> str | None:
+def verify_email_verification_token(token: str) -> Optional[str]:
     """Verify an email verification token and extract the email."""
     settings = get_settings()
 

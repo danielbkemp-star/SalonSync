@@ -238,9 +238,9 @@ async def check_in_appointment(
 @router.post("/{appointment_id}/cancel", response_model=AppointmentResponse)
 async def cancel_appointment(
     appointment_id: int,
-    reason: Optional[str] = None,
     current_user: Annotated[User, Depends(get_current_user)],
     db: Session = Depends(get_db),
+    reason: Optional[str] = None,
 ):
     """Cancel an appointment."""
     appointment = db.query(Appointment).filter(Appointment.id == appointment_id).first()

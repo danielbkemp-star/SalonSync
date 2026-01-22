@@ -209,10 +209,10 @@ async def create_sale(
 @router.post("/{sale_id}/refund", response_model=SaleResponse)
 async def refund_sale(
     sale_id: int,
-    amount: Optional[float] = None,
-    reason: Optional[str] = None,
     current_user: Annotated[User, Depends(require_staff)],
     db: Session = Depends(get_db),
+    amount: Optional[float] = None,
+    reason: Optional[str] = None,
 ):
     """Process a refund."""
     sale = db.query(Sale).filter(Sale.id == sale_id).first()

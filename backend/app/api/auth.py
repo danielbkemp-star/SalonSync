@@ -3,7 +3,7 @@ Authentication API for SalonSync
 """
 
 from datetime import timedelta
-from typing import Annotated
+from typing import Annotated, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -35,15 +35,15 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
     first_name: str
-    last_name: str | None = None
-    phone: str | None = None
+    last_name: Optional[str] = None
+    phone: Optional[str] = None
 
 
 class UserResponse(BaseModel):
     id: int
     email: str
-    first_name: str | None
-    last_name: str | None
+    first_name: Optional[str]
+    last_name: Optional[str]
     role: str
     is_active: bool
     is_verified: bool
@@ -104,6 +104,10 @@ def require_staff(current_user: Annotated[User, Depends(get_current_user)]) -> U
             detail="Staff access required"
         )
     return current_user
+
+
+# Aliases for backward compatibility
+get_current_admin_user = require_admin
 
 
 @router.post("/login", response_model=Token)
