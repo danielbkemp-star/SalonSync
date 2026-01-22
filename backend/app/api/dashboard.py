@@ -10,7 +10,7 @@ from pydantic import BaseModel
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from app.api.auth import get_current_user, require_staff
+from app.api.dependencies import get_current_user, require_staff_role
 from app.database import get_db
 from app.models.user import User
 from app.models.appointment import Appointment, AppointmentStatus
@@ -49,7 +49,7 @@ class RevenueData(BaseModel):
 
 @router.get("/metrics", response_model=DashboardMetrics)
 async def get_dashboard_metrics(
-    current_user: Annotated[User, Depends(require_staff)],
+    current_user: Annotated[User, Depends(require_staff_role)],
     db: Session = Depends(get_db),
 ):
     """Get key metrics for the dashboard."""
@@ -127,7 +127,7 @@ async def get_dashboard_metrics(
 
 @router.get("/appointments/upcoming")
 async def get_upcoming_appointments(
-    current_user: Annotated[User, Depends(require_staff)],
+    current_user: Annotated[User, Depends(require_staff_role)],
     db: Session = Depends(get_db),
     limit: int = Query(10, le=50),
 ):
@@ -164,7 +164,7 @@ async def get_upcoming_appointments(
 
 @router.get("/revenue/daily")
 async def get_daily_revenue(
-    current_user: Annotated[User, Depends(require_staff)],
+    current_user: Annotated[User, Depends(require_staff_role)],
     db: Session = Depends(get_db),
     days: int = Query(7, le=90),
 ):
@@ -209,7 +209,7 @@ async def get_daily_revenue(
 
 @router.get("/needs-attention")
 async def get_needs_attention(
-    current_user: Annotated[User, Depends(require_staff)],
+    current_user: Annotated[User, Depends(require_staff_role)],
     db: Session = Depends(get_db),
 ):
     """Get items that need attention."""

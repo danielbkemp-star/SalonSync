@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from app.api.auth import get_current_user, require_staff
+from app.api.dependencies import get_current_user, require_staff_role
 from app.database import get_db
 from app.models.user import User
 from app.models.sale import Sale, SaleItem, PaymentMethod, PaymentStatus
@@ -60,7 +60,7 @@ class SaleResponse(BaseModel):
 
 @router.get("/", response_model=List[SaleResponse])
 async def list_sales(
-    current_user: Annotated[User, Depends(require_staff)],
+    current_user: Annotated[User, Depends(require_staff_role)],
     db: Session = Depends(get_db),
     start_date: Optional[date] = None,
     end_date: Optional[date] = None,
@@ -90,7 +90,7 @@ async def list_sales(
 
 @router.get("/today/summary")
 async def get_today_summary(
-    current_user: Annotated[User, Depends(require_staff)],
+    current_user: Annotated[User, Depends(require_staff_role)],
     db: Session = Depends(get_db),
 ):
     """Get today's sales summary."""
@@ -123,7 +123,7 @@ async def get_today_summary(
 @router.get("/{sale_id}", response_model=SaleResponse)
 async def get_sale(
     sale_id: int,
-    current_user: Annotated[User, Depends(require_staff)],
+    current_user: Annotated[User, Depends(require_staff_role)],
     db: Session = Depends(get_db),
 ):
     """Get a specific sale."""
@@ -139,7 +139,7 @@ async def get_sale(
 @router.post("/", response_model=SaleResponse, status_code=status.HTTP_201_CREATED)
 async def create_sale(
     sale_data: SaleCreate,
-    current_user: Annotated[User, Depends(require_staff)],
+    current_user: Annotated[User, Depends(require_staff_role)],
     db: Session = Depends(get_db),
 ):
     """Process a new sale."""
@@ -209,7 +209,7 @@ async def create_sale(
 @router.post("/{sale_id}/refund", response_model=SaleResponse)
 async def refund_sale(
     sale_id: int,
-    current_user: Annotated[User, Depends(require_staff)],
+    current_user: Annotated[User, Depends(require_staff_role)],
     db: Session = Depends(get_db),
     amount: Optional[float] = None,
     reason: Optional[str] = None,

@@ -215,30 +215,33 @@ async def root():
 
 
 # Import and include API routers
-from app.api import auth, clients, staff, services, appointments, sales, dashboard
-from app.api import salon, media_sets, social_posts
+from app.api import auth, salons, stylists, clients, services, appointments
+from app.api import media, social, payments, sales, dashboard
 
 # Core authentication
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 
 # Salon management (multi-tenant root)
-app.include_router(salon.router, prefix="/api", tags=["Salons"])
+app.include_router(salons.router, prefix="/api", tags=["Salons"])
 
-# Client & Staff
-app.include_router(clients.router, prefix="/api/clients", tags=["Clients"])
-app.include_router(staff.router, prefix="/api/staff", tags=["Staff"])
+# Staff & Clients
+app.include_router(stylists.router, prefix="/api", tags=["Stylists & Staff"])
+app.include_router(clients.router, prefix="/api", tags=["Clients"])
 
 # Services & Appointments
-app.include_router(services.router, prefix="/api/services", tags=["Services"])
-app.include_router(appointments.router, prefix="/api/appointments", tags=["Appointments"])
+app.include_router(services.router, prefix="/api", tags=["Services"])
+app.include_router(appointments.router, prefix="/api", tags=["Appointments"])
 
 # Sales & Dashboard
 app.include_router(sales.router, prefix="/api/sales", tags=["Sales & POS"])
 app.include_router(dashboard.router, prefix="/api/dashboard", tags=["Dashboard"])
 
 # Media & Social (SalonSync differentiators)
-app.include_router(media_sets.router, prefix="/api", tags=["Media Sets (Formula Vault)"])
-app.include_router(social_posts.router, prefix="/api", tags=["Social Posts"])
+app.include_router(media.router, prefix="/api", tags=["Media Sets (Formula Vault)"])
+app.include_router(social.router, prefix="/api", tags=["Social Posts"])
+
+# Payments
+app.include_router(payments.router, prefix="/api", tags=["Payments & Stripe"])
 
 
 if __name__ == "__main__":
