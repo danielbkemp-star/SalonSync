@@ -216,7 +216,7 @@ async def root():
 
 # Import and include API routers
 from app.api import auth, salons, stylists, clients, services, appointments
-from app.api import media, social, payments, sales, dashboard
+from app.api import media, social, payments, sales, dashboard, booking, gift_cards, waitlist
 
 # Core authentication
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
@@ -242,6 +242,15 @@ app.include_router(social.router, prefix="/api", tags=["Social Posts"])
 
 # Payments
 app.include_router(payments.router, prefix="/api", tags=["Payments & Stripe"])
+
+# Public Booking (no auth required)
+app.include_router(booking.router, prefix="/api", tags=["Online Booking (Public)"])
+
+# Gift Cards
+app.include_router(gift_cards.router, prefix="/api", tags=["Gift Cards"])
+
+# Waitlist
+app.include_router(waitlist.router, prefix="/api", tags=["Waitlist"])
 
 
 if __name__ == "__main__":

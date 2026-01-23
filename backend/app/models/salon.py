@@ -110,6 +110,7 @@ class Salon(Base):
     sales = relationship("Sale", back_populates="salon")
     media_sets = relationship("MediaSet", back_populates="salon")
     social_posts = relationship("SocialPost", back_populates="salon")
+    gift_cards = relationship("GiftCard", back_populates="salon")
 
     def __repr__(self):
         return f"<Salon {self.id} - {self.name}>"

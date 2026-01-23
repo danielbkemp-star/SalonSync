@@ -96,6 +96,9 @@ class Appointment(Base):
     # Colors and Display
     color = Column(String(20), nullable=True)  # Override calendar color
 
+    # Online Booking
+    confirmation_code = Column(String(20), nullable=True, index=True)  # For client lookup
+
     # Metadata
     created_at = Column(DateTime, default=datetime.utcnow, index=True)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

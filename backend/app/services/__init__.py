@@ -19,6 +19,7 @@ from app.services.content_service import ContentService, content_service
 from app.services.instagram_service import InstagramService, instagram_service
 from app.services.payment_service import PaymentService, payment_service
 from app.services.scheduling_service import SchedulingService, scheduling_service
+from app.services.notification_service import NotificationService, notification_service
 
 __all__ = [
     # Base
@@ -44,4 +45,6 @@ __all__ = [
     "payment_service",
     "SchedulingService",
     "scheduling_service",
+    "NotificationService",
+    "notification_service",
 ]

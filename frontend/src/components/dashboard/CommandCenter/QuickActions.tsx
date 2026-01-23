@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import { Link } from 'react-router-dom'
 import {
   CalendarPlus,
   UserPlus,
@@ -21,13 +22,13 @@ export function QuickActions() {
       label: 'New Appointment',
       icon: <CalendarPlus className="h-5 w-5" />,
       href: '/appointments/new',
-      color: 'bg-brand-plum-500/20 text-brand-plum-400 hover:bg-brand-plum-500/30',
+      color: 'bg-purple-500/20 text-purple-400 hover:bg-purple-500/30',
     },
     {
       label: 'New Client',
       icon: <UserPlus className="h-5 w-5" />,
       href: '/clients/new',
-      color: 'bg-brand-rose-500/20 text-brand-rose-400 hover:bg-brand-rose-500/30',
+      color: 'bg-pink-500/20 text-pink-400 hover:bg-pink-500/30',
     },
     {
       label: 'Check Out',
@@ -51,26 +52,26 @@ export function QuickActions() {
       label: 'Gift Cards',
       icon: <Gift className="h-5 w-5" />,
       href: '/gift-cards',
-      color: 'bg-brand-gold-500/20 text-brand-gold-400 hover:bg-brand-gold-500/30',
+      color: 'bg-amber-500/20 text-amber-400 hover:bg-amber-500/30',
     },
   ]
 
   return (
     <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
       {actions.map((action) => (
-        <a
+        <Link
           key={action.label}
-          href={action.href}
+          to={action.href}
           className={cn(
             'flex flex-col items-center justify-center gap-2 p-4 rounded-xl',
-            'border border-white/10',
+            'border border-gray-700',
             'transition-all duration-200',
             action.color
           )}
         >
           {action.icon}
-          <span className="text-xs text-white/80 text-center">{action.label}</span>
-        </a>
+          <span className="text-xs text-gray-300 text-center">{action.label}</span>
+        </Link>
       ))}
     </div>
   )

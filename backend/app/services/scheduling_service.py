@@ -569,6 +569,124 @@ class SchedulingService:
         """Check if two time ranges overlap."""
         return start1 < end2 and end1 > start2
 
+    # ==================== SYNC METHODS FOR PUBLIC BOOKING ====================
+
+    def get_available_slots(
+        self,
+        db: Session,
+        salon_id: int,
+        staff_id: int,
+        date: date,
+        duration_minutes: int
+    ) -> List[time]:
+        """
+        Synchronous method to get available time slots for public booking.
+        Returns list of available start times.
+        """
+        # Get staff member
+        staff = db.query(Staff).filter(
+            Staff.id == staff_id,
+            Staff.salon_id == salon_id,
+            Staff.status == "active"
+        ).first()
+
+        if not staff:
+            return []
+
+        # Get working hours for the day
+        day_name = date.strftime("%A").lower()
+        schedule = staff.default_schedule or {}
+        day_schedule = schedule.get(day_name, {})
+
+        if not day_schedule.get("working", True):
+            return []
+
+        # Default working hours if not specified
+        start_str = day_schedule.get("start", "09:00")
+        end_str = day_schedule.get("end", "18:00")
+
+        try:
+            work_start = datetime.strptime(start_str, "%H:%M").time()
+            work_end = datetime.strptime(end_str, "%H:%M").time()
+        except ValueError:
+            work_start = time(9, 0)
+            work_end = time(18, 0)
+
+        # Get existing appointments for the day
+        day_start = datetime.combine(date, time.min)
+        day_end = datetime.combine(date, time.max)
+
+        existing_appointments = db.query(Appointment).filter(
+            and_(
+                Appointment.staff_id == staff_id,
+                Appointment.salon_id == salon_id,
+                Appointment.start_time >= day_start,
+                Appointment.start_time <= day_end,
+                Appointment.status.notin_([
+                    AppointmentStatus.CANCELLED,
+                    AppointmentStatus.NO_SHOW
+                ])
+            )
+        ).order_by(Appointment.start_time).all()
+
+        # Build list of busy periods
+        busy_periods = [
+            (apt.start_time, apt.end_time)
+            for apt in existing_appointments
+        ]
+
+        # Generate slots at 15-minute intervals
+        available_slots = []
+        current_time = datetime.combine(date, work_start)
+        end_datetime = datetime.combine(date, work_end)
+
+        while current_time + timedelta(minutes=duration_minutes) <= end_datetime:
+            slot_end = current_time + timedelta(minutes=duration_minutes)
+
+            # Check if slot conflicts with any existing appointment
+            is_available = True
+            for busy_start, busy_end in busy_periods:
+                if self._times_overlap(current_time, slot_end, busy_start, busy_end):
+                    is_available = False
+                    break
+
+            if is_available:
+                available_slots.append(current_time.time())
+
+            current_time += timedelta(minutes=self.slot_interval)
+
+        return available_slots
+
+    def check_slot_available(
+        self,
+        db: Session,
+        salon_id: int,
+        staff_id: int,
+        start_time: datetime,
+        duration_minutes: int
+    ) -> bool:
+        """
+        Synchronous method to check if a specific time slot is available.
+        """
+        end_time = start_time + timedelta(minutes=duration_minutes)
+
+        # Check for conflicting appointments
+        conflicting = db.query(Appointment).filter(
+            and_(
+                Appointment.staff_id == staff_id,
+                Appointment.salon_id == salon_id,
+                Appointment.status.notin_([
+                    AppointmentStatus.CANCELLED,
+                    AppointmentStatus.NO_SHOW
+                ]),
+                # Check for overlap
+                Appointment.start_time < end_time,
+                Appointment.end_time > start_time
+            )
+        ).first()
+
+        return conflicting is None
+
 
 # Singleton instance
 scheduling_service = SchedulingService()

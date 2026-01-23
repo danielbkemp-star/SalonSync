@@ -11,6 +11,8 @@ from app.models.appointment import Appointment, AppointmentService, AppointmentS
 from app.models.sale import Sale, SaleItem, Product, PaymentMethod, PaymentStatus
 from app.models.media_set import MediaSet
 from app.models.social_post import SocialPost, PostStatus, SocialPlatform
+from app.models.gift_card import GiftCard, GiftCardTransaction, GiftCardStatus, GiftCardType
+from app.models.waitlist import WaitlistEntry, WaitlistStatus, WaitlistPriority
 
 __all__ = [
     # User & Auth
@@ -42,4 +44,13 @@ __all__ = [
     "SocialPost",
     "PostStatus",
     "SocialPlatform",
+    # Gift Cards
+    "GiftCard",
+    "GiftCardTransaction",
+    "GiftCardStatus",
+    "GiftCardType",
+    # Waitlist
+    "WaitlistEntry",
+    "WaitlistStatus",
+    "WaitlistPriority",
 ]

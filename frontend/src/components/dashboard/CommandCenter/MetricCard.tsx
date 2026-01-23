@@ -37,18 +37,17 @@ export function MetricCard({
       to={href}
       className={cn(
         'group relative flex flex-col rounded-xl',
-        'bg-white/5 backdrop-blur-sm',
-        'border border-white/10',
-        'hover:bg-white/10 hover:border-white/20',
+        'bg-gray-900 border border-gray-800',
+        'hover:bg-gray-800 hover:border-gray-700',
         'transition-all duration-200',
-        'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-plum-500',
-        compact ? 'p-2.5' : 'p-4',
+        'focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500',
+        compact ? 'p-3' : 'p-4',
         className
       )}
     >
-      <div className={cn('flex items-center justify-between', compact ? 'mb-1.5' : 'mb-2')}>
-        <div className={cn('rounded-lg bg-brand-plum-500/20', compact ? 'p-1.5' : 'p-2')}>
-          <Icon className={cn('text-brand-plum-400', compact ? 'h-3.5 w-3.5' : 'h-4 w-4')} />
+      <div className={cn('flex items-center justify-between', compact ? 'mb-2' : 'mb-2')}>
+        <div className={cn('rounded-lg bg-purple-500/20', compact ? 'p-1.5' : 'p-2')}>
+          <Icon className={cn('text-purple-400', compact ? 'h-4 w-4' : 'h-5 w-5')} />
         </div>
         {trend && (
           <span
@@ -67,14 +66,14 @@ export function MetricCard({
         {typeof value === 'number' ? value.toLocaleString() : value}
       </span>
       <div className="flex items-baseline gap-1 mt-0.5">
-        <span className={cn('text-white/60 leading-tight', compact ? 'text-xs' : 'text-sm')}>{label}</span>
+        <span className={cn('text-gray-400 leading-tight', compact ? 'text-xs' : 'text-sm')}>{label}</span>
         {sublabel && (
-          <span className={cn('text-white/40', compact ? 'text-[10px]' : 'text-xs')}>({sublabel})</span>
+          <span className={cn('text-gray-500', compact ? 'text-[10px]' : 'text-xs')}>({sublabel})</span>
         )}
       </div>
 
       {/* Hover indicator */}
-      <div className="absolute inset-x-0 bottom-0 h-0.5 bg-brand-plum-500 scale-x-0 group-hover:scale-x-100 transition-transform rounded-b-xl" />
+      <div className="absolute inset-x-0 bottom-0 h-0.5 bg-purple-500 scale-x-0 group-hover:scale-x-100 transition-transform rounded-b-xl" />
     </Link>
   )
 }
@@ -84,18 +83,17 @@ export function MetricCardSkeleton({ className, compact = false }: { className?:
     <div
       className={cn(
         'flex flex-col rounded-xl',
-        'bg-white/5 backdrop-blur-sm',
-        'border border-white/10',
+        'bg-gray-900 border border-gray-800',
         'animate-pulse',
-        compact ? 'p-2.5' : 'p-4',
+        compact ? 'p-3' : 'p-4',
         className
       )}
     >
-      <div className={cn('flex items-center justify-between', compact ? 'mb-1.5' : 'mb-2')}>
-        <div className={cn('bg-white/10 rounded-lg', compact ? 'h-6 w-6' : 'h-8 w-8')} />
+      <div className={cn('flex items-center justify-between', compact ? 'mb-2' : 'mb-2')}>
+        <div className={cn('bg-gray-800 rounded-lg', compact ? 'h-7 w-7' : 'h-9 w-9')} />
       </div>
-      <div className={cn('bg-white/10 rounded mb-1', compact ? 'h-5 w-12' : 'h-7 w-16')} />
-      <div className={cn('bg-white/5 rounded', compact ? 'h-3 w-16' : 'h-4 w-24')} />
+      <div className={cn('bg-gray-800 rounded mb-1', compact ? 'h-5 w-12' : 'h-7 w-16')} />
+      <div className={cn('bg-gray-800/50 rounded', compact ? 'h-3 w-16' : 'h-4 w-24')} />
     </div>
   )
 }

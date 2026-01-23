@@ -63,14 +63,14 @@ export function NeedsAttention({ maxItems = 5, className }: NeedsAttentionProps)
   }
 
   return (
-    <div className={cn('rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 p-4', className)}>
+    <div className={cn('rounded-xl bg-gray-900 border border-gray-800 p-4', className)}>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <AlertCircle className="h-5 w-5 text-brand-rose-400" />
+          <AlertCircle className="h-5 w-5 text-rose-400" />
           <h2 className="text-lg font-semibold text-white">Needs Attention</h2>
         </div>
         {items.length > 0 && (
-          <span className="text-xs bg-brand-rose-500/20 text-brand-rose-300 px-2 py-0.5 rounded-full">
+          <span className="text-xs bg-rose-500/20 text-rose-400 px-2 py-0.5 rounded-full">
             {items.length}
           </span>
         )}
@@ -88,7 +88,7 @@ export function NeedsAttention({ maxItems = 5, className }: NeedsAttentionProps)
                 styles.bg,
                 'border',
                 styles.border,
-                'hover:bg-white/10 transition-colors'
+                'hover:bg-gray-800 transition-colors'
               )}
             >
               <div className="flex items-start gap-3">
@@ -97,7 +97,7 @@ export function NeedsAttention({ maxItems = 5, className }: NeedsAttentionProps)
                 </div>
                 <div>
                   <div className="text-white font-medium text-sm">{item.title}</div>
-                  <div className="text-white/50 text-xs">{item.description}</div>
+                  <div className="text-gray-400 text-xs">{item.description}</div>
                 </div>
               </div>
             </a>
@@ -105,7 +105,7 @@ export function NeedsAttention({ maxItems = 5, className }: NeedsAttentionProps)
         })}
 
         {items.length === 0 && (
-          <div className="text-center py-8 text-white/50">
+          <div className="text-center py-8 text-gray-500">
             <AlertCircle className="h-8 w-8 mx-auto mb-2 opacity-50" />
             <p>All caught up!</p>
           </div>

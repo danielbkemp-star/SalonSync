@@ -6,6 +6,25 @@ export default {
   ],
   theme: {
     extend: {
+      animation: {
+        'slide-in-from-right': 'slide-in-from-right 0.2s ease-out',
+        'fade-in': 'fade-in 0.2s ease-out',
+        'zoom-in-95': 'zoom-in-95 0.2s ease-out',
+      },
+      keyframes: {
+        'slide-in-from-right': {
+          '0%': { transform: 'translateX(100%)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        'zoom-in-95': {
+          '0%': { transform: 'scale(0.95)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+      },
       colors: {
         primary: {
           50: '#fdf4ff',
